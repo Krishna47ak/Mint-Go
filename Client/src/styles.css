@@ -1,0 +1,4 @@
+
+.custom-tick-color .recharts-cartesian-axis-tick text {
+  fill: yellow !important;
+}
