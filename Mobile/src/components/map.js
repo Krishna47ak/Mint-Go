@@ -6,7 +6,7 @@ export default function Map({ currentLocation, locations }) {
         return <ActivityIndicator className='my-28' size='large' />
     }
     return (
-        <MapView style={{ height: 459, width: 350 }}
+        <MapView style={{ height: 430, width: 350 }}
             initialRegion={{
                 ...currentLocation.coords,
                 latitudeDelta: 0.0017,
