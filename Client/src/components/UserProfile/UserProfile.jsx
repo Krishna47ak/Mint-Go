@@ -1,7 +1,7 @@
 // src/UserProfile.jsx
 import React, { useState } from "react";
 import user from "/user.png";
-import nft1 from "../../assets/nft1.png"; // Add this line
+import nft1 from "../../assets/nft1.png";
 import {
   Area,
   AreaChart,
@@ -29,8 +29,8 @@ import {
   SelectTrigger,
   SelectValue
 } from "../../components/ui/select";
-
-
+import Health from "../Health/Health"; // Add this line
+import UnityCanvas from "../UnityCanvas";
 
 const chartData = [
   { date: "2024-04-01", steps: 222 },
@@ -137,7 +137,8 @@ const chartConfig = {
 };
 
 const nfts = [
-  { id: 1, title: "Apprentice Achiever", image: {nft1}, description: "This is a description for NFT 1." },
+  { id: 1, title: "Apprentice Achiever", image: <UnityCanvas />
+    , description: "This is a description for NFT 1." },
   { id: 2, title: "Intermediate", image: {nft1}, description: "This is a description for NFT 2." },
   { id: 3, title: "Achiever", image: {nft1}, description: "This is a description for NFT 3." },
   
@@ -183,26 +184,12 @@ const UserProfile = () => {
             </div>
             <div className="mt-0 flex flex-col items-center justify-center">
               <h1 className="text-2xl font-bold text-black">John Doe</h1>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-8 ">
-            <StatCard icon="🏃‍♂️" label="Total Steps" value="12,345" />
-            <StatCard icon="📏" label="Total Distance" value="56 km" />
-            <StatCard icon="🔥" label="Total Calories" value="2,345kc" />
-            <StatCard icon="⏱️" label="Active Time" value="3.5 hrs" />
-          </div>
-
-              {/* <p className="text-sm text-white">Software Engineer</p>
-              <p className="text-sm text-white">Bangalore, India</p> */}
-              {/* <div className="mt-4 flex flex-col items-center">
-                <p className="text-sm text-white">john.doe@example.com</p>
-                <p className="text-sm text-white">+91-7090198256</p>
-              </div> */}
-              {/* <div className="mt-4">
-                <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-4 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-colors duration-300">
-                  Edit Profile
-                </button>
-              </div> */}
-              {/* Stats */}
-              
+              <Health 
+                totalSteps="12,345" 
+                totalDistance="56 km" 
+                totalCalories="2,345kc" 
+                activeTime="3.5 hrs" 
+              />
             </div>
           </div>
 
@@ -211,7 +198,6 @@ const UserProfile = () => {
             <Card className="bg-transparent h-[30rem]">
               <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
                 <div className="grid flex-1 gap-1 text-center sm:text-left">
-                  {/* <CardTitle> Chart - Interactive</CardTitle> */}
                   <CardDescription className="text-black">
                     Showing total steps for the last 3 months
                   </CardDescription>
@@ -293,39 +279,24 @@ const UserProfile = () => {
           </div>
         </div>
 
-        {/* Stats */}
-        {/* <div className="mt-10">
-          <h2 className="text-2xl font-bold text-center text-white mb-6">User Stats</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-lg shadow-lg p-6 text-center">
-              <h3 className="text-lg font-bold mb-2">Total Steps</h3>
-              <p className="text-gray-600 mb-4">12,345</p>
-            </div>
-            <div className="bg-white rounded-lg shadow-lg p-6 text-center">
-              <h3 className="text-lg font-bold mb-2">Total Distance</h3>
-              <p className="text-gray-600 mb-4">56 km</p>
-            </div>
-            <div className="bg-white rounded-lg shadow-lg p-6 text-center">
-              <h3 className="text-lg font-bold mb-2">Total Calories</h3>
-              <p className="text-gray-600 mb-4">2,345 kcal</p>
-            </div>
-          </div>
-        </div> */}
-
         {/* NFT Data */}
-        <div className="mt-10">
+        <div className="mt-10 h-[20rem]">
           <h2 className="text-2xl font-bold text-center text-white mb-6">Collected NFTs</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 h-[20rem] sm:grid-cols-2 md:grid-cols-3 gap-6">
             {nfts.map((nft) => (
-              <div key={nft.id} className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
-                <img src={nft1} alt="" className="w-full object-cover rounded-lg mb-4" />
-                <h3 className="text-lg font-bold mb-2">{nft.title}</h3>
-                <p className="text-gray-600 mb-4">{nft.description}</p>
+              <div key={nft.id} className="h-[20rem]  rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+                {/* <img src={nft1} alt="" className="w-full object-cover rounded-lg mb-4" /> */}
+                <div className="flex items-center justify-center   overflow-hidden">
+
+              <UnityCanvas />
+              </div>
+                 <h3 className="text-lg font-bold mb-2">{nft.title}</h3>
                 <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-4 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-colors duration-300">
                   View Details
-                </button>
+                </button> 
               </div>
             ))}
+    
           </div>
         </div>
       </div>

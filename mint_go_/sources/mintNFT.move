@@ -118,10 +118,47 @@ module mint_go_::mintNFT;
     }
 
     // For displaying NFT image
-    public struct NFT_MARKETPLACE has drop {}
+    public struct MINTNFT has drop {}
 
     // Part 3: Module initializer to be executed when this module is published
 
+    fun init(otw: MINTNFT, ctx: &mut TxContext) {
+        let keys = vector[
+            utf8(b"name"),
+            utf8(b"description"),
+            utf8(b"url"),
+        ];
+
+        let values = vector[
+            utf8(b"{name}"),
+            utf8(b"{description}"),
+            utf8(b"{url}"),
+        ];
+
+        // Claim the publisher
+        let publisher = package::claim(otw, ctx);
+
+        let mut display = display::new_with_fields<TestnetNFT>(
+            &publisher, keys, values, ctx
+        );
+
+        display::update_version(&mut display);
+
+        transfer::public_transfer(publisher, ctx.sender());
+        transfer::public_transfer(display, ctx.sender());
+
+        let marketplace = Marketplace {
+            id: object::new(ctx),
+            listings: table::new<ID, Listing>(ctx),
+            bids: table::new<ID, vector<Bid>>(ctx),
+        };
+
+        event::emit(MarketplaceInit {
+            object_id: object::id(&marketplace),
+        });
+
+        transfer::share_object(marketplace);
+    }
 
 
     // === Public-View Functions ===
@@ -149,229 +186,40 @@ module mint_go_::mintNFT;
     // === Entrypoints  ===
 
     /// Create a new TestnetNFT
-    public fun mint_to_sender(
-        name: vector<u8>,
-        description: vector<u8>,
-        url: vector<u8>,
-        ctx: &mut TxContext
-    ): TestnetNFT {
-        let sender = ctx.sender();
-        let nft = TestnetNFT {
-            id: object::new(ctx),
-            name: string::utf8(name),
-            description: string::utf8(description),
-            url: url::new_unsafe_from_bytes(url),
-            creator: sender,
-        };
+public fun mint_to_sender(
+    name: vector<u8>,
+    description: vector<u8>,
+    url: vector<u8>,
+    character_id: UID,
+    character_level: u64,
+    ctx: &mut TxContext
+): TestnetNFT {
+    let sender = tx_context::sender(ctx);
+    let nft = TestnetNFT {
+        id: object::new(ctx),
+        characterId: character_id,
+        characterLevel: character_level,
+        name: string::utf8(name),
+        description: string::utf8(description),
+        url: url::new_unsafe_from_bytes(url),
+        creator: sender,
+    };
 
-        event::emit(NFTMinted {
-            object_id: object::id(&nft),
-            creator: sender,
-            name: nft.name,
-        });
+    event::emit(NFTMinted {
+        object_id: object::id(&nft),
+        creator: sender,
+        name: nft.name,
+    });
 
-        nft
-    }
+    nft
+}
 
-    /// Permanently delete `nft`
-    public fun burn(nft: TestnetNFT) {
-        let TestnetNFT { id, name: _, description: _, url: _, creator: _ } = nft;
-        id.delete()
-    }
 
-    public fun place_listing<N: key + store>(marketplace: &mut Marketplace, nft: N, price: u64, ctx: &mut TxContext) {
-        let sender = ctx.sender();
-        let nft_id = object::id(&nft);
-        let listing = Listing {
-            id: object::new(ctx),
-            price,
-            owner: sender,
-            nft_id
-        };
+   
+  
 
-        event::emit(ListingCreated {
-            object_id: object::id(&listing),
-            nft_id,
-            creator: sender,
-            price: listing.price,
-        });
+   
 
-        dof::add(&mut marketplace.id, nft_id, nft);
-
-        marketplace.listings.add<ID, Listing>(nft_id, listing);
-    }
-
-    public fun cancel_listing<N: key + store>(
-        marketplace: &mut Marketplace,
-        nft_id: ID,
-        ctx: &mut TxContext
-    ): N {
-        let sender = ctx.sender();
-        assert!(marketplace.listings.contains<ID, Listing>(nft_id), EListingNotFoundForNFTId);
-
-        let listing = marketplace.listings.remove<ID, Listing>(nft_id);
-        assert!(listing.owner == sender, EInvalidOwner);
-
-        let nft: N = dof::remove(&mut marketplace.id, nft_id);
-
-        let Listing { id, owner, price, nft_id: _ } = listing;
-
-        event::emit(ListingCancelled {
-            object_id: id.uid_to_inner(),
-            nft_id,
-            creator: owner,
-            price,
-        });
-
-        id.delete();
-
-        nft
-    }
-
-    public fun buy<N: key + store>(
-        marketplace: &mut Marketplace,
-        nft_id: ID,
-        coin: Coin<SUI>,
-        ctx: &mut TxContext
-    ): N {
-        assert!(dof::exists_(&marketplace.id, nft_id), EInvalidNft);
-        let nft: N = dof::remove(&mut marketplace.id, nft_id);
-
-        let listing = marketplace.listings.remove<ID, Listing>(nft_id);
-        let Listing { id, owner, price, nft_id: _ } = listing;
-
-        assert!(coin.value() == price, EInvalidAmount);
-
-        event::emit(Buy {
-            object_id: id.uid_to_inner(),
-            nft_id: object::id(&nft),
-            creator: owner,
-            buyer: ctx.sender(),
-            price,
-        });
-
-        transfer::public_transfer(coin, owner);
-
-        id.delete();
-
-        nft
-    }
-
-    public fun place_bid(marketplace: &mut Marketplace, nft_id: ID, coin: Coin<SUI>, ctx: &mut TxContext): ID {
-        assert!(dof::exists_(&marketplace.id, nft_id), EInvalidNft);
-
-        let sender = ctx.sender();
-
-        let bid = Bid {
-            id: object::new(ctx),
-            nft_id,
-            balance: coin.into_balance(),
-            owner: sender
-        };
-
-        let bid_id = object::id(&bid);
-
-        event::emit(BidCreated {
-            object_id: bid_id,
-            nft_id,
-            price: bid.balance.value(),
-            creator: sender,
-        });
-
-        if (marketplace.bids.contains(nft_id)) {
-            let elements = marketplace.bids.borrow_mut(nft_id);
-            elements.push_back(bid);
-        } else {
-            marketplace.bids.add<ID, vector<Bid>>(nft_id, vector::singleton(bid));
-        };
-
-        bid_id
-    }
-
-    public fun cancel_bid(marketplace: &mut Marketplace, nft_id: ID, bid_id: ID, ctx: &mut TxContext): Coin<SUI> {
-        let bid = get_and_remove_bid(marketplace, nft_id, bid_id);
-
-        let sender = ctx.sender();
-        assert!(bid.owner == sender, EInvalidOwner);
-
-        let Bid { id, nft_id, balance, owner } = bid;
-
-        event::emit(BidCancelled {
-            object_id: id.uid_to_inner(),
-            nft_id,
-            creator: owner,
-            price: balance.value(),
-        });
-
-        id.delete();
-
-        coin::from_balance(balance, ctx)
-    }
-
-    public fun accept_bid<N: key + store>(
-        marketplace: &mut Marketplace,
-        nft_id: ID,
-        bid_id: ID,
-        ctx: &mut TxContext
-    ): Coin<SUI> {
-        let sender = ctx.sender();
-        // if NFT exists then listing must exist for sure
-        assert!(dof::exists_(&marketplace.id, nft_id), EInvalidNft);
-        let listing = marketplace.listings.remove<ID, Listing>(nft_id);
-        assert!(listing.owner == sender, EInvalidOwner);
-
-        let nft: N = dof::remove(&mut marketplace.id, nft_id);
-
-        let Listing { id: listing_id, owner: _, price: _, nft_id: _ } = listing;
-
-        let bid = get_and_remove_bid(marketplace, nft_id, bid_id);
-
-        let Bid { id, nft_id: _, balance, owner } = bid;
-
-        event::emit(AcceptBid {
-            object_id: id.uid_to_inner(),
-            nft_id: object::id(&nft),
-            creator: owner,
-            seller: ctx.sender(),
-            price: balance.value(),
-        });
-
-        transfer::public_transfer(nft, owner);
-
-        id.delete();
-        listing_id.delete();
-
-        coin::from_balance(balance, ctx)
-    }
-
-    // === Private Functions ===
-
-    fun get_and_remove_bid(marketplace: &mut Marketplace, nft_id: ID, bid_id: ID): Bid {
-        assert!(marketplace.bids.contains<ID, vector<Bid>>(nft_id), EBidNotFoundForNFTId);
-        let bids = marketplace.bids.borrow_mut<ID, vector<Bid>>(nft_id);
-
-        let mut bid: Option<Bid> = option::none();
-        let length = bids.length();
-        let mut i = 0;
-        while (i < length) {
-            if (object::id(bids.borrow(i)) == bid_id) {
-                bid.destroy_none();
-                bid = option::some(bids.swap_remove(i));
-
-                break
-            };
-
-            i = i + 1;
-        };
-
-        assert!(bid.is_some(), EBidNotFoundForNFTId);
-
-        if (bids.is_empty()) {
-            let v = marketplace.bids.remove<ID, vector<Bid>>(nft_id);
-            v.destroy_empty();
-        };
-
-        bid.destroy_some()
-    }
+  
 
   
