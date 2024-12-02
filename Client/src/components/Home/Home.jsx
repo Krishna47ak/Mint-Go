@@ -51,7 +51,7 @@ export default function Home() {
           />
         </div>
 
-         <button className="px-8  h-8 items-center justify-center text-black bg-white font-medium rounded-full hover:opacity-90 transition-opacity">
+         <button className="mt-5 px-8  h-10 items-center justify-center text-black bg-white font-medium rounded-full hover:opacity-90 transition-opacity">
       Download App
     </button>
         {/* Stats Section */}
@@ -67,14 +67,14 @@ export default function Home() {
         </div>
 
         {/* Vision Section */}
-        <section className="mt-16 text-white">
-          <h2 className="text-3xl font-bold mb-6">Our Vision</h2>
+        {/* <section className="mt-16 text-white"> */}
+          {/* <h2 className="text-3xl font-bold mb-6">Our Vision</h2>
           <p className="max-w-2xl mx-auto text-white/90">
             Sweatcoin is a free app which rewards your daily steps with a
             new-generation currency you can spend on cool products or donate to
             charity.
-          </p>
-        </section>
+          </p> */}
+        {/* </section> */}
 
         {/* App Ratings */}
         <div className="flex flex-wrap justify-center gap-4">
