@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 // import { Link } from 'react-router-dom';
+import { ConnectButton } from '@mysten/dapp-kit';
 
 const Menu = () => {
     return (
@@ -15,9 +16,10 @@ const Menu = () => {
                 <p className=" px-6 py-3" >Health</p></Link> */}
 
                 {/* <li className="menu-option " style={{ margin: '0 10px' }}>Download the App</li> */}
-                <button className="px-8  h-8 items-center justify-center text-black bg-white font-medium rounded-full hover:opacity-90 transition-opacity">
+                <button className=" mr-5 px-8  h-8 items-center justify-center text-black bg-white font-medium rounded-full hover:opacity-90 transition-opacity">
       Download App
     </button>
+    <ConnectButton />
                 
             </ul>
         </nav>

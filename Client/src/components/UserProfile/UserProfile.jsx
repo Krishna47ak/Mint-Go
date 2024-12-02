@@ -2,32 +2,27 @@
 import React, { useState } from "react";
 import user from "/user.png";
 import nft1 from "../../assets/nft1.png";
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  XAxis
-} from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "../../components/ui/card";
 import {
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
-  ChartTooltipContent
+  ChartTooltipContent,
 } from "../../components/ui/chart";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from "../../components/ui/select";
 import Health from "../Health/Health"; // Add this line
 import UnityCanvas from "../UnityCanvas";
@@ -137,11 +132,14 @@ const chartConfig = {
 };
 
 const nfts = [
-  { id: 1, title: "Apprentice Achiever", image: <UnityCanvas />
-    , description: "This is a description for NFT 1." },
+  {
+    id: 1,
+    title: "Apprentice Achiever",
+    image: <UnityCanvas />,
+    description: "This is a description for NFT 1.",
+  },
   // { id: 2, title: "Intermediate", image: {nft1}, description: "This is a description for NFT 2." },
   // { id: 3, title: "Achiever", image: {nft1}, description: "This is a description for NFT 3." },
-  
 ];
 
 const UserProfile = () => {
@@ -160,12 +158,17 @@ const UserProfile = () => {
     startDate.setDate(startDate.getDate() - daysToSubtract);
     return date >= startDate;
   });
+  const handleMintNFT = ()=>{
+    
+  }
 
   const StatCard = ({ icon, label, value }) => {
     return (
       <div className="bg-white/10 rounded-lg p-4 flex flex-col items-center justify-center text-center h-[8rem] mt-6">
         <div className="text-3xl mb-2">{icon}</div>
-        <p className="text-sm font-medium text-gray-300 mb-1 w-auto text-nowrap">{label}</p>
+        <p className="text-sm font-medium text-gray-300 mb-1 w-auto text-nowrap">
+          {label}
+        </p>
         <p className="text-xl font-bold text-white w-auto">{value}</p>
       </div>
     );
@@ -179,16 +182,19 @@ const UserProfile = () => {
           <div className="rounded-lg  mt-0 p-6 mx-auto backdrop-blur-xl w-[40%]">
             <div className="mt-30 flex justify-center gap-4">
               <div className="relative">
-                <img src={user} className="rounded-full w-50 h-50 relative z-10" />
+                <img
+                  src={user}
+                  className="rounded-full w-50 h-50 relative z-10"
+                />
               </div>
             </div>
             <div className="mt-0 flex flex-col items-center justify-center">
               <h1 className="text-2xl font-bold text-black">John Doe</h1>
-              <Health 
-                totalSteps="12,345" 
-                totalDistance="56 km" 
-                totalCalories="2,345kc" 
-                activeTime="3.5 hrs" 
+              <Health
+                totalSteps="12,345"
+                totalDistance="56 km"
+                totalCalories="2,345kc"
+                activeTime="3.5 hrs"
               />
             </div>
           </div>
@@ -219,7 +225,7 @@ const UserProfile = () => {
                     <SelectItem value="7d" className="rounded-lg">
                       Last 7 days
                     </SelectItem>
-                    </SelectContent>
+                  </SelectContent>
                 </Select>
               </CardHeader>
               <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
@@ -229,9 +235,19 @@ const UserProfile = () => {
                 >
                   <AreaChart className="h-[30rem]" data={filteredData}>
                     <defs>
-                      <linearGradient id="fillSteps" x1="0" y1="0" x2="0" y2="1">
+                      <linearGradient
+                        id="fillSteps"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
                         <stop offset="5%" stopColor="white" stopOpacity={0.8} />
-                        <stop offset="95%" stopColor="black" stopOpacity={0.1} />
+                        <stop
+                          offset="95%"
+                          stopColor="black"
+                          stopOpacity={0.1}
+                        />
                       </linearGradient>
                     </defs>
                     <CartesianGrid vertical={false} />
@@ -264,7 +280,7 @@ const UserProfile = () => {
                         />
                       }
                     />
-                    <Area 
+                    <Area
                       dataKey="steps"
                       type="natural"
                       fill="url(#fillSteps)"
@@ -278,25 +294,35 @@ const UserProfile = () => {
             </Card>
           </div>
         </div>
-
+        <div className=" flex flex-col items-center justify-center ">
+          <div className="text-2xl font-bold text-center text-white mb-6">
+            Mint NFTs
+          </div>
+          <button onClick={handleMintNFT} className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-4 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-colors duration-300">
+            Mint NFT
+          </button>
+        </div>
         {/* NFT Data */}
-        <div className="mt-10 h-[20rem]">
-          <h2 className="text-2xl font-bold text-center text-white mb-6">Collected NFTs</h2>
+        <div className="mt-10">
+          <h2 className="text-2xl font-bold text-center text-white mb-6">
+            Collected NFTs
+          </h2>
           <div className="grid grid-cols-1 h-[20rem] sm:grid-cols-2 md:grid-cols-3 gap-6">
             {nfts.map((nft) => (
-              <div key={nft.id} className="h-[20rem]  rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+              <div
+                key={nft.id}
+                className="h-[20rem]  rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300"
+              >
                 {/* <img src={nft1} alt="" className="w-full object-cover rounded-lg mb-4" /> */}
                 <div className="flex items-center justify-center   overflow-hidden">
-
-              <UnityCanvas level={String(nft.id)}/>
-              </div>
-                 <h3 className="text-lg font-bold mb-2">{nft.title}</h3>
+                  <UnityCanvas level={String(nft.id)} />
+                </div>
+                <h3 className="text-lg font-bold mb-2">{nft.title}</h3>
                 <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-4 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-colors duration-300">
                   View Details
-                </button> 
+                </button>
               </div>
             ))}
-    
           </div>
         </div>
       </div>
