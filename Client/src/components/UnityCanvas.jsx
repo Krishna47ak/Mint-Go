@@ -76,7 +76,7 @@ const UnityCanvas = () => {
       style={{
         width: "100%",
         height: "200px",
-        background: "#1f1f20",
+        background: "#1f1f20",  
       }}
     ></canvas>
   );
