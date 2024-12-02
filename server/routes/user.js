@@ -8,8 +8,6 @@ const router = express.Router();
 router.post('/step-count', async (req, res) => {
   const { userId, stepCount, dailyStepCount, locations } = req.body;
 
-  console.log(req.body);
-  
 
   // Validate the input
   if (!userId) {
@@ -70,7 +68,7 @@ router.get('/', async (req, res) => {
     });
   } catch (error) {
     console.error('Error saving step count:', error);
-    res.status(500).json({ message: 'Failed to save step count', error });
+    res.status(500).json({ success: true, message: 'Failed to save step count', error });
   }
 });
 export default router;
