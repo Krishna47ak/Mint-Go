@@ -284,17 +284,16 @@ const UserProfile = () => {
           <h2 className="text-2xl font-bold text-center text-white mb-6">Collected NFTs</h2>
           <div className="grid grid-cols-1 h-[20rem] sm:grid-cols-2 md:grid-cols-3 gap-6">
             {nfts.map((nft) => (
-              <div key={nft.id} className="h-[20rem] bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+              <div key={nft.id} className="h-[20rem]  rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
                 {/* <img src={nft1} alt="" className="w-full object-cover rounded-lg mb-4" /> */}
                 <div className="flex items-center justify-center   overflow-hidden">
 
               <UnityCanvas />
               </div>
-                {/* <h3 className="text-lg font-bold mb-2">{nft.title}</h3>
-                <p className="text-gray-600 mb-4">{nft.description}</p>
+                 <h3 className="text-lg font-bold mb-2">{nft.title}</h3>
                 <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-4 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-colors duration-300">
                   View Details
-                </button> */}
+                </button> 
               </div>
             ))}
     
