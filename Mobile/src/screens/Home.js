@@ -27,6 +27,7 @@ export default function Home({ navigation }) {
     };
 
     const startRecording = () => {
+        setCurrentStepCount(0);
         setRecording(true);
     }
 
@@ -41,31 +42,33 @@ export default function Home({ navigation }) {
     const callback = useCallback((location) => handleLocationChange(location), [recording])
     const [errorMsg] = useLocation(isFocused || recording, callback)
 
-    const subscribe = async () => {
+    const initializePedometer = async () => {
         const isAvailable = await Pedometer.isAvailableAsync();
         setIsPedometerAvailable(String(isAvailable));
-
-        if (isAvailable) {
-            const end = new Date();
-            const start = new Date();
-            start.setDate(end.getDate() - 1);
-
-            const pastStepCountResult = await Pedometer.getStepCountAsync(start, end);
-
-            if (pastStepCountResult) {
-                setPastStepCount(pastStepCountResult.steps);
-            }
-
-            return Pedometer.watchStepCount(result => {
-                setCurrentStepCount(result.steps);
-            });
-        }
+        return isAvailable;
     };
 
+    const startStepCounting = useCallback(() => {
+        return Pedometer.watchStepCount(result => {
+            if (recording) {
+                setCurrentStepCount(prevCount => prevCount + result.steps);
+            }
+        });
+    }, [recording]);
+
     useEffect(() => {
-        const subscription = subscribe();
-        return () => subscription && subscription.remove();
-    }, []);
+        let subscription;
+        const setup = async () => {
+            const isAvailable = await initializePedometer();
+            if (isAvailable && recording) {
+                subscription = startStepCounting();
+            }
+        };
+
+        setup();
+
+        return () => subscription?.remove();
+    }, [recording, startStepCounting]);
 
 
     return (
@@ -210,7 +213,7 @@ const styles = StyleSheet.create({
         gap: 10,
         marginBottom: 20
     },
-    button: { 
+    button: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
