@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-const UnityCanvas = ({level}) => {
+const UnityCanvas = () => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -16,7 +16,6 @@ const UnityCanvas = ({level}) => {
       canvas.style.width = "100%";
       canvas.style.height = "100%";
       canvas.style.position = "fixed";
-
       document.body.style.textAlign = "left";
     }
 
@@ -26,9 +25,9 @@ const UnityCanvas = ({level}) => {
         if (createUnityInstance) {
           const unityInstance = await createUnityInstance(canvasRef.current, {
             arguments: [],
-            dataUrl: `./src/assets/Build${level}/WebPokemon.data`,
-            frameworkUrl: `./src/assets/Build${level}/WebPokemon.framework.js`,
-            codeUrl: `./src/assets/Build${level}/WebPokemon.wasm`,
+            dataUrl: `./src/assets/Build/WebPokemon.data`,
+            frameworkUrl: `./src/assets/Build/WebPokemon.framework.js`,
+            codeUrl: `./src/assets/Build/WebPokemon.wasm`,
             streamingAssetsUrl: "StreamingAssets",
             companyName: "CrowdStrike",
             productName: "opPokemon",
@@ -36,10 +35,10 @@ const UnityCanvas = ({level}) => {
           });
 
           if (unityInstance) {
-            unityInstance.SendMessage("StateManager", "startGame", level);
+            unityInstance.SendMessage("StateManager", "startGame", "1");
             window.addEventListener("keydown", (e) => {
               if (e.key === "w") {
-                unityInstance.SendMessage("StateManager", "evolve", level);
+                unityInstance.SendMessage("StateManager", "evolve", "1");
               }
             });
             console.log("Data sent to Unity");
@@ -56,7 +55,7 @@ const UnityCanvas = ({level}) => {
 
     // Dynamically load Unity loader script
     const script = document.createElement("script");
-    script.src = `./src/assets/Build${level}/WebPokemon.loader.js`;
+    script.src = `./src/assets/Build/WebPokemon.loader.js`;
     script.onload = initializeUnity;
     script.onerror = () => console.error("Failed to load Unity loader script");
     document.body.appendChild(script);
@@ -74,9 +73,8 @@ const UnityCanvas = ({level}) => {
       height="1080"
       tabIndex="-1"
       style={{
-        width: "100%",
-        height: "200px",
-        background: "#1f1f20",  
+        width: "1080px",
+        height: "1080px",
       }}
     ></canvas>
   );
