@@ -288,7 +288,7 @@ const UserProfile = () => {
                 {/* <img src={nft1} alt="" className="w-full object-cover rounded-lg mb-4" /> */}
                 <div className="flex items-center justify-center   overflow-hidden">
 
-              <UnityCanvas />
+              <UnityCanvas level={String(nft.id)}/>
               </div>
                  <h3 className="text-lg font-bold mb-2">{nft.title}</h3>
                 <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-4 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-colors duration-300">

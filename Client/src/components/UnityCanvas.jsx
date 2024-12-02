@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-const UnityCanvas = () => {
+const UnityCanvas = ({level}) => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -36,10 +36,10 @@ const UnityCanvas = () => {
           });
 
           if (unityInstance) {
-            unityInstance.SendMessage("StateManager", "startGame", "1");
+            unityInstance.SendMessage("StateManager", "startGame", level);
             window.addEventListener("keydown", (e) => {
               if (e.key === "w") {
-                unityInstance.SendMessage("StateManager", "evolve", "1");
+                unityInstance.SendMessage("StateManager", "evolve", level);
               }
             });
             console.log("Data sent to Unity");
