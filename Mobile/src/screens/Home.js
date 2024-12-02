@@ -8,6 +8,7 @@ import useLocation from '../hooks/useLocation';
 import { LinearGradient } from 'expo-linear-gradient';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Map from '../components/map';
+import { API_ENDPOINT } from '../constants/Api';
 
 export default function Home({ navigation }) {
     const isFocused = useIsFocused()
@@ -35,9 +36,34 @@ export default function Home({ navigation }) {
         setRecording(false);
     }
 
-    const saveTrack = () => {
-        console.log(locations);
-    }
+    const saveTrack = async () => {
+        try {
+            const response = await fetch(`${API_ENDPOINT}/step-count`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId: '674ccad3ccdc6113faeeabcc',
+                    dailyStepCount: pastStepCount,
+                    stepCount: currentStepCount,
+                    locations: locations,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to save track');
+            }
+
+            setLocations([]);
+            setCurrentStepCount(0);
+
+            alert('Success', 'Your track has been saved successfully!');
+        } catch (error) {
+            console.error('Error saving track:', error);
+            alert('Error', 'Failed to save your track. Please try again.');
+        }
+    };
 
     const callback = useCallback((location) => handleLocationChange(location), [recording])
     const [errorMsg] = useLocation(isFocused || recording, callback)
