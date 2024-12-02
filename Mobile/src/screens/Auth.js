@@ -38,7 +38,7 @@ const Auth = ({ navigation }) => {
                 <ScrollView contentContainerStyle={styles.scrollContent}>
                     <View style={styles.header}>
                         <FontAwesome name="map-marker" size={50} color="white" />
-                        <Text style={styles.headerTitle}>Fitness Tracker</Text>
+                        <Text style={styles.headerTitle}>Mint Go</Text>
                     </View>
 
                     <View style={styles.formContainer}>

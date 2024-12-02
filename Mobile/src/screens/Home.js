@@ -8,7 +8,7 @@ import useLocation from '../hooks/useLocation';
 import { LinearGradient } from 'expo-linear-gradient';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Map from '../components/map';
-import { API_ENDPOINT } from '../constants/Api';
+import { API_ENDPOINT, USER_ID } from '../constants/Api';
 
 export default function Home({ navigation }) {
     const isFocused = useIsFocused()
@@ -38,20 +38,22 @@ export default function Home({ navigation }) {
 
     const saveTrack = async () => {
         try {
-            const response = await fetch(`${API_ENDPOINT}/step-count`, {
+            const response = await fetch(`${API_ENDPOINT}/user/step-count`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    userId: '674ccad3ccdc6113faeeabcc',
+                    userId: USER_ID,
                     dailyStepCount: pastStepCount,
                     stepCount: currentStepCount,
                     locations: locations,
                 }),
             });
 
-            if (!response.ok) {
+            const responseJson = await response.json();            
+
+            if (!responseJson.message) {
                 throw new Error('Failed to save track');
             }
 
@@ -107,7 +109,7 @@ export default function Home({ navigation }) {
 
                 <View style={styles.header}>
                     <View style={styles.headerContent}>
-                        <Text style={styles.headerTitle}>Fitness Tracker</Text>
+                        <Text style={styles.headerTitle}>Mint Go</Text>
                         <Pressable
                             onPress={() => navigation.navigate('Profile')}
                             style={styles.profileButton}

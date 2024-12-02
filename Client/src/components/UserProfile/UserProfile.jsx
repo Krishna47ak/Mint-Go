@@ -139,8 +139,8 @@ const chartConfig = {
 const nfts = [
   { id: 1, title: "Apprentice Achiever", image: <UnityCanvas />
     , description: "This is a description for NFT 1." },
-  { id: 2, title: "Intermediate", image: {nft1}, description: "This is a description for NFT 2." },
-  { id: 3, title: "Achiever", image: {nft1}, description: "This is a description for NFT 3." },
+  // { id: 2, title: "Intermediate", image: {nft1}, description: "This is a description for NFT 2." },
+  // { id: 3, title: "Achiever", image: {nft1}, description: "This is a description for NFT 3." },
   
 ];
 
