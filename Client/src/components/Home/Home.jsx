@@ -20,8 +20,8 @@ export default function Home() {
 
       {/* Hero Section */}
       <main className="container mx-auto px-4 pt-32 text-center">
-        <h1 className="text-white text-5xl md:text-7xl font-bold mb-4">
-          It pays to walk.
+        <h1 className="text-white text-5xl md:text-6xl font-bold mb-4">
+        Walk your way to wealth and wellness
         </h1>
         <p className="text-white/90 text-xl mb-8">
           Healthier planet. Healthier, wealthier you.
@@ -51,10 +51,9 @@ export default function Home() {
           />
         </div>
 
-        <button className="bg-white text-purple-900 hover:bg-white/90 px-4 py-2 rounded">
-          How to Spend
-        </button>
-
+         <button className="px-8  h-8 items-center justify-center text-black bg-white font-medium rounded-full hover:opacity-90 transition-opacity">
+      Download App
+    </button>
         {/* Stats Section */}
         <div className="grid grid-cols-2 gap-8 max-w-md mx-auto mt-16 text-white">
           <div>

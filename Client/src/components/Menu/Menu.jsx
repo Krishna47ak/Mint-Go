@@ -11,10 +11,11 @@ const Menu = () => {
             <ul className=" px-6 py-3 flex items-center justify-center ">
                 <Link to="/profile" className="px-6 py-3" >
                 <p className=" px-6 py-3" >Profile</p></Link>
-                <p className="px-6 py-3" >Health</p>
+                {/* <Link to="/health" className="px-6 py-3" >
+                <p className=" px-6 py-3" >Health</p></Link> */}
 
                 {/* <li className="menu-option " style={{ margin: '0 10px' }}>Download the App</li> */}
-                <button className="px-6  h-8 items-center justify-center text-black bg-white font-medium rounded-full hover:opacity-90 transition-opacity">
+                <button className="px-8  h-8 items-center justify-center text-black bg-white font-medium rounded-full hover:opacity-90 transition-opacity">
       Download App
     </button>
                 
