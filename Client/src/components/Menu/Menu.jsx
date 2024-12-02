@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 // import { Link } from 'react-router-dom';
 
 const Menu = () => {
@@ -8,7 +9,8 @@ const Menu = () => {
                 <img src="path/to/logo.png" alt="Logo" />
             </div> */}
             <ul className=" px-6 py-3 flex items-center justify-center ">
-                <p className=" px-6 py-3" >Become an Influencer</p>
+                <Link to="/profile" className="px-6 py-3" >
+                <p className=" px-6 py-3" >Profile</p></Link>
                 <p className="px-6 py-3" >Health</p>
 
                 {/* <li className="menu-option " style={{ margin: '0 10px' }}>Download the App</li> */}

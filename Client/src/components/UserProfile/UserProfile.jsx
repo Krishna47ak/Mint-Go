@@ -30,6 +30,15 @@ import {
   SelectValue
 } from "../../components/ui/select";
 
+// Define the StatCard component
+const StatCard = ({ icon, label, value }) => (
+  <div className="bg-white rounded-lg shadow-lg p-4 text-center">
+    <div className="text-3xl">{icon}</div>
+    <h3 className="text-lg font-bold mb-2">{label}</h3>
+    <p className="text-gray-600 mb-4">{value}</p>
+  </div>
+);
+
 const chartData = [
   { date: "2024-04-01", steps: 222 },
   { date: "2024-04-02", steps: 97 },
@@ -135,9 +144,10 @@ const chartConfig = {
 };
 
 const nfts = [
-  { id: 1, title: "NFT 1", image: {nft1} },
-  { id: 2, title: "NFT 2", image: {nft1} },
-  { id: 3, title: "NFT 3", image: {nft1} },
+  { id: 1, title: "Apprentice Achiever", image: {nft1}, description: "This is a description for NFT 1." },
+  { id: 2, title: "Intermediate", image: {nft1}, description: "This is a description for NFT 2." },
+  { id: 3, title: "Achiever", image: {nft1}, description: "This is a description for NFT 3." },
+  
 ];
 
 const UserProfile = () => {
@@ -157,33 +167,60 @@ const UserProfile = () => {
     return date >= startDate;
   });
 
+  const StatCard = ({ icon, label, value }) => {
+    return (
+      <div className="bg-white/10 rounded-lg p-4 flex flex-col items-center justify-center text-center h-[10rem] ">
+        <div className="text-3xl mb-2">{icon}</div>
+        <p className="text-sm font-medium text-gray-300 mb-1 w-auto text-nowrap">{label}</p>
+        <p className="text-xl font-bold text-white w-auto">{value}</p>
+      </div>
+    );
+  };
+
   return (
     <>
-      <div className=" bg-gradient-to-t from-[#f17f55] py-28 min-h-screen  px-10  to-[#8046c3]">
+      <div className="bg-gradient-to-t from-[#f17f55] py-28 min-h-screen px-10 to-[#8046c3]">
         {/* User Card */}
-        <div className="flex flex-row space-x-5 h-[40rem]">
-          <div className="   rounded-lg shadow-lg p-4  mx-auto w-[40%]">
+        <div className="flex flex-row space-x-5 h-[35rem]">
+          <div className="rounded-lg shadow-lg p-6 mx-auto backdrop-blur-xl w-[40%]">
             <div className="mt-30 flex justify-center gap-4">
               <div className="relative">
-                <div className="absolute inset-0 rounded-full bg-black w-40 h-40"></div>
                 <img src={user} className="rounded-full w-50 h-50 relative z-10" />
               </div>
             </div>
-            <div className="items-center justify-center">
-              <h1 className="text-xl font-bold">John Doe</h1>
-              <p className="text-sm text-gray-500">Software Engineer</p>
-              <p className="text-sm text-gray-500">San Francisco, CA</p>
+            <div className="mt-8 flex flex-col items-center justify-center">
+              <h1 className="text-2xl font-bold text-black">John Doe</h1>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-8 ">
+            <StatCard icon="🏃‍♂️" label="Total Steps" value="12,345" />
+            <StatCard icon="📏" label="Total Distance" value="56 km" />
+            <StatCard icon="🔥" label="Total Calories" value="2,345 kcal" />
+            <StatCard icon="⏱️" label="Active Time" value="3.5 hrs" />
+          </div>
+
+              {/* <p className="text-sm text-white">Software Engineer</p>
+              <p className="text-sm text-white">Bangalore, India</p> */}
+              {/* <div className="mt-4 flex flex-col items-center">
+                <p className="text-sm text-white">john.doe@example.com</p>
+                <p className="text-sm text-white">+91-7090198256</p>
+              </div> */}
+              {/* <div className="mt-4">
+                <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-4 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-colors duration-300">
+                  Edit Profile
+                </button>
+              </div> */}
+              {/* Stats */}
+              
             </div>
           </div>
 
           {/* Chart */}
-          <div className="  rounded-lg shadow-lg p-4  mx-auto w-full">
+          <div className="rounded-lg shadow-lg p-6 mx-auto w-[60%]">
             <Card className="bg-transparent h-[30rem]">
-              <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row ">
+              <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
                 <div className="grid flex-1 gap-1 text-center sm:text-left">
-                  <CardTitle>Area Chart - Interactive</CardTitle>
+                  {/* <CardTitle> Chart - Interactive</CardTitle> */}
                   <CardDescription className="text-black">
-                    Showing total visitors for the last 3 months
+                    Showing total steps for the last 3 months
                   </CardDescription>
                 </div>
                 <Select value={timeRange} onValueChange={setTimeRange}>
@@ -203,27 +240,19 @@ const UserProfile = () => {
                     <SelectItem value="7d" className="rounded-lg">
                       Last 7 days
                     </SelectItem>
-                  </SelectContent>
+                    </SelectContent>
                 </Select>
               </CardHeader>
-              <CardContent className="px-2 pt-4 h-[30rem] sm:px-6 sm:pt-6 ">
+              <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
                 <ChartContainer
                   config={chartConfig}
-                  className="aspect-auto  w-full h-[22rem]"
+                  className="aspect-auto w-full h-[22rem]"
                 >
-                  <AreaChart className="h-[30rem]"data={filteredData}>
+                  <AreaChart className="h-[30rem]" data={filteredData}>
                     <defs>
                       <linearGradient id="fillSteps" x1="0" y1="0" x2="0" y2="1">
-                        <stop
-                          offset="5%"
-                          stopColor="white"
-                          stopOpacity={0.8}
-                        />
-                        <stop
-                          offset="95%"
-                          stopColor="white"
-                          stopOpacity={0.1}
-                        />
+                        <stop offset="5%" stopColor="white" stopOpacity={0.8} />
+                        <stop offset="95%" stopColor="black" stopOpacity={0.1} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid vertical={false} />
@@ -233,7 +262,7 @@ const UserProfile = () => {
                       axisLine={false}
                       tickMargin={8}
                       minTickGap={32}
-                      tick={{ fill: "#FFFF00" }} // Change the text color here
+                      tick={{ fill: "blue" }} // Change the text color here
                       tickFormatter={(value) => {
                         const date = new Date(value);
                         return date.toLocaleDateString("en-US", {
@@ -271,14 +300,37 @@ const UserProfile = () => {
           </div>
         </div>
 
+        {/* Stats */}
+        {/* <div className="mt-10">
+          <h2 className="text-2xl font-bold text-center text-white mb-6">User Stats</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="bg-white rounded-lg shadow-lg p-6 text-center">
+              <h3 className="text-lg font-bold mb-2">Total Steps</h3>
+              <p className="text-gray-600 mb-4">12,345</p>
+            </div>
+            <div className="bg-white rounded-lg shadow-lg p-6 text-center">
+              <h3 className="text-lg font-bold mb-2">Total Distance</h3>
+              <p className="text-gray-600 mb-4">56 km</p>
+            </div>
+            <div className="bg-white rounded-lg shadow-lg p-6 text-center">
+              <h3 className="text-lg font-bold mb-2">Total Calories</h3>
+              <p className="text-gray-600 mb-4">2,345 kcal</p>
+            </div>
+          </div>
+        </div> */}
+
         {/* NFT Data */}
-        <div className="mt-10 ">
+        <div className="mt-10">
           <h2 className="text-2xl font-bold text-center text-white mb-6">Collected NFTs</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 ">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {nfts.map((nft) => (
-              <div key={nft.id} className="bg-white rounded-lg shadow-lg p-4">
-                <img src={nft1} alt="" className="w-full  object-cover rounded-lg mb-4" />
-                <h3 className="text-lg font-bold">{nft.title}</h3>
+              <div key={nft.id} className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+                <img src={nft1} alt="" className="w-full object-cover rounded-lg mb-4" />
+                <h3 className="text-lg font-bold mb-2">{nft.title}</h3>
+                <p className="text-gray-600 mb-4">{nft.description}</p>
+                <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-4 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-colors duration-300">
+                  View Details
+                </button>
               </div>
             ))}
           </div>
