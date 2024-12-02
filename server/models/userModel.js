@@ -1,5 +1,16 @@
 import mongoose from 'mongoose';
-import { characterModel } from './characterModel';  // Path to your character model file
+
+const locationSchema = new mongoose.Schema({
+  timestamp: Number,
+  coords: {
+    latitude: Number,
+    longitude: Number,
+    altitube: Number,
+    accuracy: Number,
+    heading: Number,
+    speed: Number
+  }
+})
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -12,16 +23,25 @@ const userSchema = new mongoose.Schema({
     trim: true,     // Removes any extra spaces from the email
     match: [/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Please enter a valid email address'], // Email validation regex
   },
-  characterId: {
-    type: mongoose.Schema.Types.ObjectId,  // Reference to the Character model
-    ref: 'Character',                     // Specifies that the characterId refers to the Character model
-    required: false,                       // The characterId is optional
+  tokens: {
+    type: Number,
+    min: 0,
   },
+  rank: {
+    type: Number,
+    min: 0,
+  },
+  stepCount: {
+    type: Number,
+    min: 0,                                // Step count cannot be negative
+  },
+  dailyStepCount: {
+    type: Number,
+    min: 0,                                // Step count cannot be negative
+  },
+  locations: [locationSchema]
 }, {
-  timestamps: true, // Automatically adds createdAt and updatedAt fields
+  timestamps: true,                        // Automatically adds createdAt and updatedAt fields
 });
 
-// Create a User model using the schema
-const User = mongoose.model('User', userSchema);
-
-export default User;
+export const userModel = mongoose.model('User', userSchema);

@@ -1,5 +1,5 @@
 import express from 'express';
-import { stepCountModel } from '../models/stepCountModel.js';  // Import the StepCount model
+import { userModel } from '../models/userModel.js';
 
 const router = express.Router();
 
@@ -16,7 +16,7 @@ router.post('/step-count', async (req, res) => {
   }
 
   try {
-    const user = await stepCountModel.findOnebyId({ userId });
+    const user = await userModel.findById({ _id: userId });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -26,7 +26,7 @@ router.post('/step-count', async (req, res) => {
     user.locations = locations;
     await user.save();
 
-    // const newStepCount = new stepCountModel({
+    // const newStepCount = new userModel({
     //   userId,
     //   stepCount,
     //   dailyStepCount,
@@ -45,7 +45,7 @@ router.post('/step-count', async (req, res) => {
   }
 });
 
-router.get('/step-count', async (req, res) => {
+router.get('/', async (req, res) => {
   const { userId } = req.body;
 
   // Validate the input
@@ -56,7 +56,7 @@ router.get('/step-count', async (req, res) => {
   }
 
   try {
-    const user = await stepCountModel.findOnebyId({ userId });
+    const user = await userModel.findById({ _id: userId });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
