@@ -8,6 +8,9 @@ const router = express.Router();
 router.post('/step-count', async (req, res) => {
   const { userId, stepCount, dailyStepCount, locations } = req.body;
 
+  console.log(req.body);
+  
+
   // Validate the input
   if (!userId) {
     return res.status(400).json({
