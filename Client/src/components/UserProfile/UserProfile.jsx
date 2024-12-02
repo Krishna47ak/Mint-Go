@@ -30,14 +30,7 @@ import {
   SelectValue
 } from "../../components/ui/select";
 
-// Define the StatCard component
-const StatCard = ({ icon, label, value }) => (
-  <div className="bg-white rounded-lg shadow-lg p-4 text-center">
-    <div className="text-3xl">{icon}</div>
-    <h3 className="text-lg font-bold mb-2">{label}</h3>
-    <p className="text-gray-600 mb-4">{value}</p>
-  </div>
-);
+
 
 const chartData = [
   { date: "2024-04-01", steps: 222 },
@@ -169,7 +162,7 @@ const UserProfile = () => {
 
   const StatCard = ({ icon, label, value }) => {
     return (
-      <div className="bg-white/10 rounded-lg p-4 flex flex-col items-center justify-center text-center h-[10rem] ">
+      <div className="bg-white/10 rounded-lg p-4 flex flex-col items-center justify-center text-center h-[8rem] mt-6">
         <div className="text-3xl mb-2">{icon}</div>
         <p className="text-sm font-medium text-gray-300 mb-1 w-auto text-nowrap">{label}</p>
         <p className="text-xl font-bold text-white w-auto">{value}</p>
@@ -179,21 +172,21 @@ const UserProfile = () => {
 
   return (
     <>
-      <div className="bg-gradient-to-t from-[#f17f55] py-28 min-h-screen px-10 to-[#8046c3]">
+      <div className="bg-gradient-to-t from-[#f17f55] py-16 min-h-screen px-10 to-[#8046c3]">
         {/* User Card */}
         <div className="flex flex-row space-x-5 h-[35rem]">
-          <div className="rounded-lg shadow-lg p-6 mx-auto backdrop-blur-xl w-[40%]">
+          <div className="rounded-lg  mt-0 p-6 mx-auto backdrop-blur-xl w-[40%]">
             <div className="mt-30 flex justify-center gap-4">
               <div className="relative">
                 <img src={user} className="rounded-full w-50 h-50 relative z-10" />
               </div>
             </div>
-            <div className="mt-8 flex flex-col items-center justify-center">
+            <div className="mt-0 flex flex-col items-center justify-center">
               <h1 className="text-2xl font-bold text-black">John Doe</h1>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-8 ">
             <StatCard icon="🏃‍♂️" label="Total Steps" value="12,345" />
             <StatCard icon="📏" label="Total Distance" value="56 km" />
-            <StatCard icon="🔥" label="Total Calories" value="2,345 kcal" />
+            <StatCard icon="🔥" label="Total Calories" value="2,345kc" />
             <StatCard icon="⏱️" label="Active Time" value="3.5 hrs" />
           </div>
 
@@ -214,7 +207,7 @@ const UserProfile = () => {
           </div>
 
           {/* Chart */}
-          <div className="rounded-lg shadow-lg p-6 mx-auto w-[60%]">
+          <div className="rounded-lg  p-6 mx-auto w-[60%]">
             <Card className="bg-transparent h-[30rem]">
               <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
                 <div className="grid flex-1 gap-1 text-center sm:text-left">
