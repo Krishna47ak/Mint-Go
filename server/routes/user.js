@@ -9,9 +9,9 @@ router.post('/step-count', async (req, res) => {
   const { userId, stepCount, dailyStepCount, locations } = req.body;
 
   // Validate the input
-  if (!userId || !stepCount) {
+  if (!userId) {
     return res.status(400).json({
-      message: 'Both userId and stepCount are required.',
+      message: 'userId is required.',
     });
   }
 
