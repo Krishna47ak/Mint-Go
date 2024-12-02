@@ -1,5 +1,5 @@
 // src/UserProfile.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import user from "/user.png";
 import nft1 from "../../assets/nft1.png";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
@@ -147,6 +147,7 @@ const nfts = [
 
 const UserProfile = () => {
   const [timeRange, setTimeRange] = useState("90d");
+  const [profileData, setProfileData] = useState([])
 
   const filteredData = chartData.filter((item) => {
     const date = new Date(item.date);
@@ -163,9 +164,9 @@ const UserProfile = () => {
   });
   const suiClient = useSuiClient();
   const {
-  	mutate: signAndExecute,
-  	isSuccess,
-  	isPending,
+    mutate: signAndExecute,
+    isSuccess,
+    isPending,
   } = useSignAndExecuteTransaction();
   const handleMintNFT = async () => {
     try {
@@ -213,7 +214,6 @@ const UserProfile = () => {
                 showEffects: true,
               },
             });
-  
           },
         },
       );
@@ -236,24 +236,58 @@ const UserProfile = () => {
     );
   };
 
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await fetch(`https://mint-go.onrender.com/api/v1/user/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: '674d48a39482e00f3e632bd6'
+          }),
+        });
+
+        const responseJson = await response.json();
+
+        if (!responseJson.success) {
+          throw new Error('Failed to fetch data');
+        }
+
+        setProfileData(responseJson?.user)
+
+        // alert('Success', 'Your track has been saved successfully!');
+      } catch (error) {
+        console.error('Error saving track:', error);
+        alert('Error', 'Failed to save your track. Please try again.');
+      }
+    }
+
+    if (profileData?.length == 0) {
+      fetchProfile()
+    }
+
+  }, [profileData])
+
   return (
     <>
       <div className="bg-gradient-to-t from-[#f17f55] py-16 min-h-screen px-10 to-[#8046c3]">
         {/* User Card */}
         <div className="flex flex-row space-x-5 h-[35rem]">
-          <div className="rounded-lg  mt-0 p-6 mx-auto backdrop-blur-xl w-[40%]">
+          <div className="flex flex-col justify-between rounded-lg  mt-0 p-6 mx-auto backdrop-blur-xl w-[40%]">
             <div className="mt-30 flex justify-center gap-4">
               <div className="relative">
                 <img
-                  src={user}
-                  className="rounded-full w-50 h-50 relative z-10"
+                  src={profileData?.img}
+                  className="rounded-full w-60 h-6w-60 relative z-10"
                 />
               </div>
             </div>
             <div className="mt-0 flex flex-col items-center justify-center">
-              <h1 className="text-2xl font-bold text-black">John Doe</h1>
+              <h1 className="text-2xl font-bold text-black">{profileData?.name}</h1>
               <Health
-                totalSteps="12,345"
+                totalSteps={profileData?.stepCount}
                 totalDistance="56 km"
                 totalCalories="2,345kc"
                 activeTime="3.5 hrs"
@@ -368,7 +402,7 @@ const UserProfile = () => {
           </button>
         </div>
         {/* NFT Data */}
-        
+
         <div className="mt-20 mx-auto ">
           <p className="text-center mb-2 text-white font-bold">POKEMON</p>
           <div className="flex mx-auto items-center justify-center overflow-hidden h-[500px] w-[500px] rounded-[2rem]" >

@@ -13,7 +13,7 @@ const Health = ({ totalSteps, totalDistance, totalCalories, activeTime }) => {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-8">
-      <StatCard icon="🏃‍♂️" label="Total Steps" value={totalSteps} />
+      <StatCard icon="🏃‍♂️" label="Steps Today" value={totalSteps} />
       <StatCard icon="📏" label="Total Distance" value={totalDistance} />
       <StatCard icon="🔥" label="Total Calories" value={totalCalories} />
       <StatCard icon="⏱️" label="Active Time" value={activeTime} />
