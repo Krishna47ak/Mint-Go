@@ -9,11 +9,11 @@ router.post('/step-count', async (req, res) => {
   const { userId, stepCount, dailyStepCount, locations } = req.body;
 
   // Validate the input
-  // if (!userId || !stepCount) {
-  //   return res.status(400).json({
-  //     message: 'Both userId and stepCount are required.',
-  //   });
-  // }
+  if (!userId) {
+    return res.status(400).json({
+      message: 'userId is required.',
+    });
+  }
 
   try {
     const user = await userModel.findById({ _id: userId });
