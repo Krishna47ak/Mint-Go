@@ -51,9 +51,9 @@ export default function Home({ navigation }) {
                 }),
             });
 
-            const responseJson = await response.json();            
+            const responseJson = await response.json();
 
-            if (!responseJson.message) {
+            if (!responseJson.success) {
                 throw new Error('Failed to save track');
             }
 
@@ -70,9 +70,23 @@ export default function Home({ navigation }) {
     const callback = useCallback((location) => handleLocationChange(location), [recording])
     const [errorMsg] = useLocation(isFocused || recording, callback)
 
+    const handlePastStepCount = async () => {
+        if (isPedometerAvailable) {
+            const end = new Date();
+            const start = new Date();
+            start.setDate(end.getDate() - 1);
+            const pastStepCountResult = await Pedometer.getStepCountAsync(start, end);
+
+            if (pastStepCountResult) {
+                setPastStepCount(pastStepCountResult.steps);
+            }
+        };
+    }
+
     const initializePedometer = async () => {
         const isAvailable = await Pedometer.isAvailableAsync();
         setIsPedometerAvailable(String(isAvailable));
+        handlePastStepCount()
         return isAvailable;
     };
 

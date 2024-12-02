@@ -1,18 +1,56 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import DetailsCard from '../components/DetailsCard';
+import { API_ENDPOINT, USER_ID } from '../constants/Api';
 
 const Profile = ({ navigation }) => {
-    const userData = {
-        name: "Ananda Krishna",
-        email: "ananda@gmail.com",
-        tokens: 1250,
-        rank: 5,
-        stepsNow: 2435,
-        stepsLast24h: 8976,
-    };
+    // const userData = {
+    //     name: "Ananda Krishna",
+    //     email: "ananda@gmail.com",
+    //     tokens: 1250,
+    //     rank: 5,
+    //     stepCount: 2435,
+    //     dailyStepCount: 8976,
+    // };
+
+    const [profileData, setProfileData] = useState([])
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const response = await fetch(`${API_ENDPOINT}/user/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId: USER_ID
+                    }),
+                });
+
+                const responseJson = await response.json();
+
+                if (!responseJson.success) {
+                    throw new Error('Failed to fetch data');
+                }
+
+                setProfileData(responseJson?.user)
+
+                // alert('Success', 'Your track has been saved successfully!');
+            } catch (error) {
+                console.error('Error saving track:', error);
+                alert('Error', 'Failed to save your track. Please try again.');
+            }
+        }
+
+        if (profileData?.length == 0) {
+            fetchProfile()
+        }
+
+    }, [profileData])
+
 
     return (
         <LinearGradient
@@ -23,25 +61,25 @@ const Profile = ({ navigation }) => {
                 <View style={styles.profileHeader}>
                     <View style={styles.profileImageContainer}>
                         <Image
-                            source={{ uri: 'https://via.placeholder.com/150' }}
+                            source={{ uri: profileData?.img }}
                             style={styles.profileImage}
                         />
                         <TouchableOpacity style={styles.editButton}>
                             <FontAwesome name="pencil" size={20} color="white" />
                         </TouchableOpacity>
                     </View>
-                    <Text style={styles.name}>{userData.name}</Text>
-                    <Text style={styles.email}>{userData.email}</Text>
+                    <Text style={styles.name}>{profileData.name}</Text>
+                    <Text style={styles.email}>{profileData.email}</Text>
                 </View>
 
                 <View style={styles.statsContainer}>
                     <View style={styles.statsRow}>
                         <View style={styles.statCard}>
-                            <Text style={styles.statValue}>{userData.tokens}</Text>
+                            <Text style={styles.statValue}>{profileData.tokens}</Text>
                             <Text style={styles.statLabel}>Tokens</Text>
                         </View>
                         <View style={styles.statCard}>
-                            <Text style={styles.statValue}>#{userData.rank}</Text>
+                            <Text style={styles.statValue}>#{profileData.rank}</Text>
                             <Text style={styles.statLabel}>Rank</Text>
                         </View>
                     </View>
@@ -50,21 +88,21 @@ const Profile = ({ navigation }) => {
                 <View style={styles.detailsContainer}>
                     <DetailsCard
                         title="Current Steps"
-                        details={userData.stepsNow}
+                        details={profileData.stepCount}
                     />
                     <DetailsCard
                         title="Last 24 Hours"
-                        details={userData.stepsLast24h}
+                        details={profileData.dailyStepCount}
                     />
                 </View>
 
                 <View style={styles.leaderboardContainer}>
                     <Text style={styles.sectionTitle}>Leaderboard</Text>
-                    {[1, 2, 3].map((pos) => (
+                    {["Shashi Kumar", "Hari Narayan", "Praful Anand"].map((pos, i) => (
                         <View key={pos} style={styles.leaderboardItem}>
-                            <Text style={styles.position}>{pos}</Text>
+                            <Text style={styles.position}>{i + 1}</Text>
                             <View style={styles.userInfo}>
-                                <Text style={styles.userName}>User {pos}</Text>
+                                <Text style={styles.userName}>{pos}</Text>
                                 <Text style={styles.userSteps}>12,345 steps</Text>
                             </View>
                         </View>
