@@ -26,6 +26,9 @@ import {
 } from "../../components/ui/select";
 import Health from "../Health/Health"; // Add this line
 import UnityCanvas from "../UnityCanvas";
+import { Transaction } from "@mysten/sui/transactions";
+import { bcs } from "@mysten/sui/bcs";
+import { useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
 
 const chartData = [
   { date: "2024-04-01", steps: 222 },
@@ -158,9 +161,68 @@ const UserProfile = () => {
     startDate.setDate(startDate.getDate() - daysToSubtract);
     return date >= startDate;
   });
-  const handleMintNFT = ()=>{
-    
-  }
+  const suiClient = useSuiClient();
+  const {
+  	mutate: signAndExecute,
+  	isSuccess,
+  	isPending,
+  } = useSignAndExecuteTransaction();
+  const handleMintNFT = async () => {
+    try {
+      const tx = new Transaction();
+
+      // Define static data
+      const name = bcs
+        .vector(bcs.U8)
+        .serialize(new TextEncoder().encode("Charmender"));
+      const description = bcs
+        .vector(bcs.U8)
+        .serialize(
+          new TextEncoder().encode(
+            "Charmander is a small, dinosaur-like Pokémon with a flame on the tip of its tail. It evolves into Charmeleon at level 16."
+          )
+        );
+      const url = bcs
+        .vector(bcs.U8)
+        .serialize(new TextEncoder().encode("https://example.com/nft.png"));
+      const characterId =
+        "0x3b87db4f8cae9e35ffb6df2e55946761e2820cc651eeeac80745680fd1b8f1a5"; // Use the provided address
+      const characterLevel = bcs.U64.serialize(1); // Example level
+
+      // Add a Move call to the transaction
+      tx.moveCall({
+        target: `0x6b81f967d2d2d95cdc8fc1e7ee37958b5940bc40e853ff00f22d6fd5e5e5c42b::mint_go_::mint_to_sender`,
+        arguments: [
+          tx.pure(name),
+          tx.pure(description),
+          tx.pure(url),
+          tx.object(characterId),
+          tx.pure(characterLevel),
+        ],
+      });
+
+      signAndExecute(
+        {
+          transaction: tx,
+        },
+        {
+          onSuccess: async ({ digest }) => {
+            const { effects } = await suiClient.waitForTransaction({
+              digest: digest,
+              options: {
+                showEffects: true,
+              },
+            });
+  
+          },
+        },
+      );
+
+      console.log("Minting successful");
+    } catch (error) {
+      console.error("Error minting NFT:", error);
+    }
+  };
 
   const StatCard = ({ icon, label, value }) => {
     return (
@@ -298,7 +360,10 @@ const UserProfile = () => {
           <div className="text-2xl font-bold text-center text-white mb-6">
             Mint NFTs
           </div>
-          <button onClick={handleMintNFT} className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-4 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-colors duration-300">
+          <button
+            onClick={handleMintNFT}
+            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-4 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-colors duration-300"
+          >
             Mint NFT
           </button>
         </div>
